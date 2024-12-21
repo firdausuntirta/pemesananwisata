@@ -32,10 +32,14 @@ Route::prefix('admin')->group(function () {
     // Group Route Admin (Butuh Autentikasi)
     Route::middleware(['admin.auth'])->group(function () {
         // Dashboard Admin
+        Route::redirect('/', '/admin/dashboard');
+
         Route::get('/dashboard', [AdminController::class, 'index'])
             ->name('admin.dashboard');
 
         // Tambahkan route admin lainnya di sini
+        Route::post('/profile/update', [AdminController::class, 'updateProfile'])
+            ->name('admin.profile.update');
     });
 });
 

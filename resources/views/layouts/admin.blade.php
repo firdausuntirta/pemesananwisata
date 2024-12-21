@@ -57,7 +57,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; FIRDAUSOK 2024</span>
                     </div>
                 </div>
             </footer>
@@ -73,6 +73,102 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+
+    <!-- Modal Profil Admin -->
+    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileModalLabel">Profil Admin</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img class="img-profile rounded-circle" src="{{ asset('images/indonesia.png') }}" width="100"
+                            height="100">
+                    </div>
+                    <form id="profileUpdateForm" method="POST" action="{{ route('admin.profile.update') }}"
+                        enctype="multipart/form-data">
+                        @csrf
+
+                        <!-- Tampilkan error global -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <!-- Tampilkan pesan sukses -->
+                        @if (session('success'))
+                            <div class="alert alert-success">
+
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                name="name" value="{{ old('name', Auth::guard('admin')->user()->nama) }}" required>
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                name="email" value="{{ old('email', Auth::guard('admin')->user()->email) }}" required>
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password Saat Ini</label>
+                            <input type="password" class="form-control @error('current_password') is-invalid @enderror"
+                                name="current_password" required>
+                            @error('current_password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password Baru (Opsional)</label>
+                            <input type="password" class="form-control @error('new_password') is-invalid @enderror"
+                                name="new_password">
+                            @error('new_password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label>Konfirmasi Password Baru</label>
+                            <input type="password" class="form-control" name="new_password_confirmation">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -113,7 +209,14 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('js/chart-area-demo.js') }}"></script>
     <script src="{{ asset('js/chart-pie-demo.js') }}"></script>
-
+    <script>
+        $(document).ready(function() {
+            // Hilangkan pesan setelah 3 detik
+            setTimeout(function() {
+                $('#successMessage').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
 </body>
 
 </html>

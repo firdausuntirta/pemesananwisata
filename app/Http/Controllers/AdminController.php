@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class AdminController extends Controller
 {
@@ -53,5 +57,73 @@ class AdminController extends Controller
         return view('admin.dashboard', [
             'admin' => $admin
         ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        try {
+            // Tambahkan logging request
+            Log::info('Profile Update Request', [
+                'data' => $request->all(),
+                'user' => Auth::guard('admin')->user()
+            ]);
+
+            $admin = Auth::guard('admin')->user();
+
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:admin,email,' . $admin->id,
+                'current_password' => 'required',
+                'new_password' => 'nullable|min:6|confirmed'
+            ]);
+
+            // Verifikasi password
+            if (!Hash::check($request->current_password, $admin->password)) {
+                Log::warning('Invalid Current Password', [
+                    'user_id' => $admin->id
+                ]);
+                return back()->withErrors(['current_password' => 'Password saat ini salah']);
+            }
+
+            // Update data
+            $updateData = [
+                'nama' => $request->name,
+                'email' => $request->email,
+                'updated_at' => now()
+            ];
+
+            // Update password jika ada
+            if ($request->filled('new_password')) {
+                $updateData['password'] = Hash::make($request->new_password);
+            }
+
+            // Proses update
+            $result = DB::table('admin')
+                ->where('id', $admin->id)
+                ->update($updateData);
+
+            Log::info('Profile Update Result', [
+                'user_id' => $admin->id,
+                'update_result' => $result
+            ]);
+
+            return back()->with('success', 'Profil berhasil diperbarui');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Tangani error validasi
+            Log::error('Validation Error', [
+                'errors' => $e->errors()
+            ]);
+            return back()->withErrors($e->errors());
+        } catch (\Exception $e) {
+            // Tangani error umum
+            Log::error('Profile Update Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->withErrors([
+                'error' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
     }
 }
