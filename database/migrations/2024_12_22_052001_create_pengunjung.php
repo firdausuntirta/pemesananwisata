@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('no_hp')->nullable();
             $table->text('alamat')->nullable();
-            $table->enum('status', ['aktif', 'non-aktif'])->default('aktif');
-            $table->integer('hasVerifiedEmail')->default(0);
+            $table->date('tanggal_berkunjung')->nullable();
             $table->timestamps();
         });
     }

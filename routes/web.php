@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminPengunjungController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -40,8 +41,17 @@ Route::prefix('admin')->group(function () {
         // Tambahkan route admin lainnya di sini
         Route::post('/profile/update', [AdminController::class, 'updateProfile'])
             ->name('admin.profile.update');
+
+        Route::get('/pengunjung/create', [AdminPengunjungController::class, 'create'])->name('admin.pengunjung.create');
+        Route::post('/pengunjung', [AdminPengunjungController::class, 'store'])->name('admin.pengunjung.store');
+        Route::get('/pengunjung', [AdminPengunjungController::class, 'index'])->name('admin.pengunjung.index');
+        Route::get('/pengunjung/{id}', [AdminPengunjungController::class, 'show'])->name('admin.pengunjung.show');
+        Route::delete('/pengunjung/{id}', [AdminPengunjungController::class, 'destroy'])->name('admin.pengunjung.destroy');
+        Route::put('/pengunjung/{id}', [AdminPengunjungController::class, 'update'])->name('admin.pengunjung.update');
+        Route::get('/pengunjung/{id}/edit', [AdminPengunjungController::class, 'edit'])->name('admin.pengunjung.edit');
     });
 });
-
+// Rute API
+Route::get('/api/pengunjung/jumlah', [AdminPengunjungController::class, 'getJumlahPengunjung']);
 
 require __DIR__ . '/auth.php';

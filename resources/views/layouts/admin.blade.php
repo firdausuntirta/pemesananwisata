@@ -20,6 +20,13 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <style>
+        .invisible {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+    </style>
 
 </head>
 
@@ -204,11 +211,13 @@
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
     <!-- Page level plugins -->
-    <script src="{{ asset('js/Chart.min.js') }}"></script>
+    @hasSection('charts')
+        <script src="{{ asset('js/Chart.min.js') }}"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="{{ asset('js/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('js/chart-pie-demo.js') }}"></script>
+        <!-- Page level custom scripts -->
+        <script src="{{ asset('js/chart-area-demo.js') }}"></script>
+        <script src="{{ asset('js/chart-pie-demo.js') }}"></script>
+    @endif
     <script>
         $(document).ready(function() {
             // Hilangkan pesan setelah 3 detik

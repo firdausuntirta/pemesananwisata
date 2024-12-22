@@ -1,4 +1,11 @@
 @extends('layouts.admin')
+
+@section('charts')
+    <script src="{{ asset('js/Chart.min.js') }}"></script>
+    <script src="{{ asset('js/chart-area-demo.js') }}"></script>
+    <script src="{{ asset('js/chart-pie-demo.js') }}"></script>
+@endsection
+
 @section('content')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -9,6 +16,24 @@
 
     <!-- Content Row -->
     <div class="row">
+
+        <!-- Jumlah Pengunjung Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Jumlah Pengunjung</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="jumlahPengunjung">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
@@ -28,7 +53,7 @@
             </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Earnings (Annual) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
@@ -52,8 +77,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                            </div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb -1">Tasks</div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
                                     <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
@@ -74,27 +98,9 @@
             </div>
         </div>
 
-        <!-- Pending Requests Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Content Row -->
-
     <div class="row">
 
         <!-- Area Chart -->
@@ -155,7 +161,7 @@
                     </div>
                     <div class="mt-4 text-center small">
                         <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
+                            <i class="fas fa-circle text-primary "></i> Direct
                         </span>
                         <span class="mr-2">
                             <i class="fas fa-circle text-success"></i> Social
@@ -168,4 +174,16 @@
             </div>
         </div>
     </div>
+    <script>
+        // Mengambil jumlah pengunjung dari API
+        fetch('/api/pengunjung/jumlah')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('jumlahPengunjung').innerText = data.jumlah_pengunjung;
+            })
+            .catch(error => console.error('Error fetching jumlah pengunjung:', error));
+    </script>
+    @hasSection('charts')
+        @yield('charts')
+    @endif
 @endsection
