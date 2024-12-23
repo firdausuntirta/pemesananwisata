@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-
 class AdminController extends Controller
 {
     // Metode untuk menampilkan form login
@@ -129,24 +128,51 @@ class AdminController extends Controller
 
     public function apiLogin(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        try {
+            // Validasi email dan password
+            $credentials = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
 
-        // Gunakan guard admin
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
+            // Gunakan guard 'admin' untuk autentikasi
+            if (!Auth::guard('admin')->attempt($credentials)) {
+                return response()->json(['message' => 'Credentials are not valid'], 401);
+            }
 
-            // Jika Anda ingin mengembalikan token atau data admin
+            // Ambil admin yang sedang login
+            $admin = Auth::guard('admin')->user();
+
+            // Pastikan Anda menggunakan Sanctum untuk token API
             return response()->json([
-                'message' => 'Login berhasil',
-                'admin' => Auth::guard('admin')->user(),
+                'message' => 'Login successful',
+                'token' => $admin->createToken('$email')->plainTextToken,
             ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('API Login Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json(['message' => 'An error occurred during login'], 500);
+        }
+    }
+    public function apiLogout(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            Log::error('User not authenticated. Token: ' . $request->bearerToken());
+            return response()->json([
+                'message' => 'No authenticated user found.',
+            ], 401);
         }
 
+        $user->currentAccessToken()->delete();
         return response()->json([
-            'message' => 'Kredensial tidak valid.',
-        ], 401);
+            'message' => 'Logout successful',
+        ], 200);
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminPengunjungController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApiAdminPengunjungController;
 
 Route::get('/', function () {
     return view('layouts.pengunjung');
@@ -48,5 +49,19 @@ Route::prefix('admin')->group(function () {
         Route::delete('/pengunjung/{id}', [AdminPengunjungController::class, 'destroy'])->name('admin.pengunjung.destroy');
         Route::put('/pengunjung/{id}', [AdminPengunjungController::class, 'update'])->name('admin.pengunjung.update');
         Route::get('/pengunjung/{id}/edit', [AdminPengunjungController::class, 'edit'])->name('admin.pengunjung.edit');
+    });
+});
+Route::prefix('api')->group(function () {
+    Route::middleware(['admin.auth'])->group(function () {
+        Route::get('/admin/pengunjung/jumlah/today', [ApiAdminPengunjungController::class, 'getJumlahPengunjungToday']);
+        Route::get('/admin/pengunjung/charttotaltahunan', [ApiAdminPengunjungController::class, 'getDataPengunjungTahunan']);
+        Route::get('/admin/pengunjung/charttotalbulanan', [ApiAdminPengunjungController::class, 'getDataPengunjungBulanan']);
+        Route::get('/admin/pengunjung/charttotalharian', [ApiAdminPengunjungController::class, 'getDataPengunjungHarian']);
+        Route::get('/admin/pengunjung/jumlah', [ApiAdminPengunjungController::class, 'getJumlahPengunjung']);
+        Route::post('/admin/pengunjung/input', [ApiAdminPengunjungController::class, 'store']);
+        Route::get('/admin/pengunjung', [ApiAdminPengunjungController::class, 'index']);
+        Route::get('/admin/pengunjung/{id}', [ApiAdminPengunjungController::class, 'show']);
+        Route::put('/admin/pengunjung/{id}', [ApiAdminPengunjungController::class, 'update']);
+        Route::delete('/admin/pengunjung/{id}', [ApiAdminPengunjungController::class, 'destroy']);
     });
 });

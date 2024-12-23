@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // Registrasi middleware
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\AdminAuthenticate::class,
+            'redirect.if.not.auth' => \App\Http\Middleware\RedirectIfNotAuthenticated::class,
+            'check.sanctum.token' => \App\Http\Middleware\CheckSanctumToken::class,
         ]);
     })
     ->withExceptions(

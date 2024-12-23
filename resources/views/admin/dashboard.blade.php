@@ -146,13 +146,13 @@
 
     <script>
         // Mengambil jumlah pengunjung dari API
-        fetch('/api/pengunjung/jumlah')
+        fetch('/api/admin/pengunjung/jumlah')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('jumlahPengunjung').innerText = data.jumlah_pengunjung;
             })
             .catch(error => console.error('Error fetching jumlah pengunjung:', error));
-        fetch('/api/pengunjung/jumlah/today')
+        fetch('/api/admin/pengunjung/jumlah/today')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('jumlahPengunjungToday').innerText = data.jumlah_pengunjung_hari_ini;
@@ -162,7 +162,7 @@
         document.getElementById("tahunSelect").addEventListener("change", function() {
             const selectedYear = this.value;
 
-            fetch(`/api/pengunjung/charttotaltahunan?tahun=${selectedYear}`)
+            fetch(`/api/admin/pengunjung/charttotaltahunan?tahun=${selectedYear}`)
                 .then((response) => response.json())
                 .then((data) => {
                     // Inisialisasi ulang chart setelah data diterima
@@ -288,7 +288,7 @@
 
         // Fungsi untuk memuat data bulanan
         function loadMonthlyData(month) {
-            fetch(`/api/pengunjung/charttotalbulanan?month=${month}`)
+            fetch(`/api/admin/pengunjung/charttotalbulanan?month=${month}`)
                 .then((response) => response.json())
                 .then((data) => {
                     updateChart(data); // Fungsi untuk memperbarui chart
@@ -334,7 +334,7 @@
         }
 
 
-        fetch("/api/pengunjung/charttotalharian")
+        fetch("/api/admin/pengunjung/charttotalharian")
             .then((response) => response.json())
             .then((data) => {
                 var ctx = document.getElementById("harianChart");
