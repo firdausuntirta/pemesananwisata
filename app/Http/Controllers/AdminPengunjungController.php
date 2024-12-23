@@ -192,18 +192,22 @@ class AdminPengunjungController extends Controller
     {
         $pengunjung = DB::table('pengunjung')
             ->select(DB::raw('DATE(tanggal_berkunjung) as date'), DB::raw('COUNT(*) as count'))
-            ->where('tanggal_berkunjung', '>=', Carbon::now()->subDays(7))
+            ->where('tanggal_berkunjung', '>=', Carbon::now()->subDays(6)->startOfDay()) // 6 hari + hari ini
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
         $formattedData = [
-            'labels' => $pengunjung->pluck('date')->map(function ($date) {
-                // Ubah format tanggal menjadi nama hari (contoh: "Senin")
-                return Carbon::parse($date)->isoFormat('dddd');
-            }),
-            'data' => $pengunjung->pluck('count')
+            'labels' => collect(range(0, 6))->map(function ($daysAgo) {
+                // Menghasilkan nama hari untuk 7 hari terakhir
+                return Carbon::now()->subDays($daysAgo)->isoFormat('dddd');
+            })->reverse()->values(),
+            'data' => collect(range(0, 6))->map(function ($daysAgo) use ($pengunjung) {
+                $date = Carbon::now()->subDays($daysAgo)->toDateString();
+                return $pengunjung->firstWhere('date', $date)->count ?? 0; // 0 jika tidak ada data
+            })->reverse()->values(),
         ];
+
         return response()->json($formattedData);
     }
 }
