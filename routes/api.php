@@ -8,6 +8,13 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Rute API Input Pengunjung
+Route::post('/pengunjung/input', [ApiAdminPengunjungController::class, 'store']);
+Route::get('/pengunjung', [ApiAdminPengunjungController::class, 'index']);
+Route::get('/pengunjung/{id}', [ApiAdminPengunjungController::class, 'show']);
+Route::put('/pengunjung/{id}', [ApiAdminPengunjungController::class, 'update']);
+Route::delete('/pengunjung/{id}', [ApiAdminPengunjungController::class, 'destroy']);
+
 // Rute API
 Route::get('/pengunjung/jumlah', [ApiAdminPengunjungController::class, 'getJumlahPengunjung']);
 Route::get('/pengunjung/jumlah/today', [ApiAdminPengunjungController::class, 'getJumlahPengunjungToday']);

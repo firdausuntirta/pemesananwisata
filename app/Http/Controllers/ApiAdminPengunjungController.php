@@ -77,9 +77,6 @@ class ApiAdminPengunjungController extends Controller
 
         return response()->json($formattedData);
     }
-
-
-
     public function getDataPengunjungHarian()
     {
         $pengunjung = DB::table('pengunjung')
@@ -101,5 +98,113 @@ class ApiAdminPengunjungController extends Controller
         ];
 
         return response()->json($formattedData);
+    }
+
+    public function index(Request $request)
+    {
+        $query = AdminPengunjung::query();
+
+        // Filter berdasarkan pencarian
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('no_hp', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan tanggal
+        if ($request->has('tanggal_dari') && $request->has('tanggal_sampai')) {
+            $tanggalDari = $request->get('tanggal_dari');
+            $tanggalSampai = $request->get('tanggal_sampai');
+
+            if ($tanggalDari && $tanggalSampai) {
+                $query->whereBetween('tanggal_berkunjung', [$tanggalDari, $tanggalSampai]);
+            }
+        }
+
+        // Sorting
+        if ($request->has('sort')) {
+            $sort = $request->get('sort');
+            switch ($sort) {
+                case 'nama_asc':
+                    $query->orderBy('nama', 'asc');
+                    break;
+                case 'nama_desc':
+                    $query->orderBy('nama', 'desc');
+                    break;
+                case 'tanggal_asc':
+                    $query->orderBy('tanggal_berkunjung', 'asc');
+                    break;
+                case 'tanggal_desc':
+                    $query->orderBy('tanggal_berkunjung', 'desc');
+                    break;
+            }
+        }
+
+        $limit = $request->get('limit', 10);
+
+        // Ambil data dengan pagination
+        $pengunjung = $query->oldest()->paginate($limit);
+
+        return response()->json($pengunjung);
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengunjung,email',
+            'no_hp' => 'required|string|max:20',
+            'alamat' => 'nullable|string',
+            'tanggal_berkunjung' => 'required|date'
+        ]);
+
+        $pengunjung = AdminPengunjung::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data pengunjung berhasil disimpan.',
+            'data' => $pengunjung
+        ], 201);
+    }
+
+    public function show($id)
+    {
+        $pengunjung = AdminPengunjung::findOrFail($id);
+
+        return response()->json($pengunjung);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengunjung,email,' . $id,
+            'no_hp' => 'required|string|max:20',
+            'alamat' => 'nullable|string',
+            'tanggal_berkunjung' => 'required|date'
+        ]);
+
+        $pengunjung = AdminPengunjung::findOrFail($id);
+        $pengunjung->update($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data pengunjung berhasil diperbarui.',
+            'data' => $pengunjung
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $pengunjung = AdminPengunjung::findOrFail($id);
+        $pengunjung->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data pengunjung berhasil dihapus.'
+        ]);
     }
 }
