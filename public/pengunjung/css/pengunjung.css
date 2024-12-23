@@ -1,0 +1,69 @@
+.portfolio-item {
+    overflow: hidden; /* Membatasi elemen gambar agar tidak keluar dari card */
+    position: relative; /* Membuat wrapper sebagai referensi posisi */
+}
+
+.portfolio-image-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.portfolio-image {
+    transition: transform 0.3s ease, filter 0.3s ease;
+    width: 100%;
+    height: auto;
+}
+
+.portfolio-item:hover .portfolio-image {
+    transform: scale(1.1); /* Gambar diperbesar 10% */
+    filter: brightness(60%); /* Memberikan efek gelap */
+}
+
+/* Nama tempat dan rating */
+.portfolio-details {
+    position: absolute;
+    bottom: 20px; /* Jarak dari bawah */
+    left: 20px; /* Jarak dari kiri */
+    color: white; /* Warna teks */
+    z-index: 10; /* Menempatkan elemen di atas gambar */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Bayangan teks */
+}
+
+.portfolio-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.portfolio-rating {
+    margin-top: 5px;
+}
+
+.portfolio-rating img {
+    height: 20px;
+    margin-right: 5px;
+}
+
+.portfolio-rating-value {
+    position: absolute;
+    top: 10px; /* Jarak dari atas */
+    right: 10px; /* Jarak dari kanan */
+    background-color: rgba(0, 0, 0, 0.7); /* Latar belakang hitam transparan */
+    color: #ffff; /* Warna teks kuning emas */
+    padding: 5px 8px; /* Jarak di dalam elemen */
+    border-radius: 5px; /* Membuat sudut membulat */
+    font-size: 14px; /* Ukuran font */
+    font-weight: bold; /* Teks tebal */
+    z-index: 15; /* Pastikan elemen berada di atas */
+    text-align: center; /* Pusatkan teks */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Efek bayangan */
+}
+
+.portfolio-rating-value img {
+    margin-left: 5px;
+    margin-bottom: 4px;
+    top: 10px; /* Jarak dari atas */
+    right: 10px; /* Jarak dari kanan */
+    height: 15px;
+    text-align: center;
+}

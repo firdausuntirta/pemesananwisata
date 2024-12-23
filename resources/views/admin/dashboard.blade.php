@@ -191,17 +191,6 @@
     </div>
 
     <script>
-        // Fungsi untuk memuat data bulanan
-        function loadMonthlyData(month) {
-            fetch(`/api/pengunjung/charttotalbulanan?month=${month}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    updateChart(data); // Fungsi untuk memperbarui chart
-                })
-                .catch((error) => {
-                    console.error("Error fetching monthly visitor data:", error);
-                });
-        }
         // Mengambil jumlah pengunjung dari API
         fetch('/api/pengunjung/jumlah')
             .then(response => response.json())
@@ -317,7 +306,8 @@
         // Trigger fetch for the default year on page load
         document.getElementById("tahunSelect").dispatchEvent(new Event("change"));
 
-        // Fungsi untuk memperbarui chart
+
+
         document.addEventListener("DOMContentLoaded", function() {
             // Ambil bulan saat ini (1-12)
             const currentMonth = new Date().getMonth() + 1; // Januari = 0, jadi tambahkan 1
@@ -347,6 +337,43 @@
                     console.error("Error fetching monthly visitor data:", error);
                 });
         }
+
+        // Fungsi untuk memperbarui chart
+        function updateChart(data) {
+            var ctx = document.getElementById("bulananChart");
+            var myLineChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: "Jumlah Pengunjung",
+                        data: data.data,
+                        backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        borderColor: "rgba(78, 115, 223, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointBorderColor: "rgba(78, 115, 223, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                maxTicksLimit: 31
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                },
+            });
+        }
+
+
         fetch("/api/pengunjung/charttotalharian")
             .then((response) => response.json())
             .then((data) => {
