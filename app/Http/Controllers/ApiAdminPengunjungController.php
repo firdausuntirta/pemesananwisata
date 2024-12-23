@@ -8,13 +8,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AdminPengunjung;
 
-
 Carbon::setLocale('id');
 
 class ApiAdminPengunjungController extends Controller
 {
-    //
-    // Tambahkan properti untuk menyimpan data admin
     protected $admin;
 
     // Konstruktor untuk menginisialisasi admin
@@ -22,17 +19,19 @@ class ApiAdminPengunjungController extends Controller
     {
         $this->admin = Auth::guard('admin')->user();
     }
-    public function getJumlahPengunjung()
-    {
-        $jumlahPengunjung = AdminPengunjung::count(); // Menghitung jumlah pengunjung
-        return response()->json(['jumlah_pengunjung' => $jumlahPengunjung]);
-    }
     public function getJumlahPengunjungToday()
     {
         $today = Carbon::today();
         $visitorCount = AdminPengunjung::whereDate('tanggal_berkunjung', $today)->count();
         return response()->json(['jumlah_pengunjung_hari_ini' => $visitorCount]);
     }
+    public function getJumlahPengunjung()
+    {
+        $query = AdminPengunjung::query();
+        $jumlahPengunjung = $query->count();
+        return response()->json(['jumlah_pengunjung' => $jumlahPengunjung]);
+    }
+
 
     public function getDataPengunjungTahunan(Request $request)
     {

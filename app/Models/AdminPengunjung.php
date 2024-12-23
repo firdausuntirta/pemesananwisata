@@ -10,7 +10,6 @@ class AdminPengunjung extends Model
     use HasFactory;
 
     protected $table = 'pengunjung';
-
     protected $fillable = [
         'nama',
         'email',

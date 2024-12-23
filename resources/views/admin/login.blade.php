@@ -76,7 +76,6 @@
 
                         <form action="{{ route('admin.login.process') }}" method="POST">
                             @csrf
-
                             <!-- Email Input -->
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address</label>

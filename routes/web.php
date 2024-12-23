@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminPengunjungController;
 use Illuminate\Support\Facades\Route;
@@ -51,5 +50,3 @@ Route::prefix('admin')->group(function () {
         Route::get('/pengunjung/{id}/edit', [AdminPengunjungController::class, 'edit'])->name('admin.pengunjung.edit');
     });
 });
-
-require __DIR__ . '/auth.php';
