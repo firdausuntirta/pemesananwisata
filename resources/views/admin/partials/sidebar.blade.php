@@ -48,7 +48,7 @@
     </li>
 
     <!-- Nav Item - Tiket -->
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTiket"
             aria-expanded="true" aria-controls="collapseTiket">
             <i class="fas fa-fw fa-ticket-alt"></i>
@@ -60,7 +60,7 @@
                 <a class="collapse-item" href="tiket-list.html">Daftar Tiket</a>
             </div>
         </div>
-    </li>
+    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider">

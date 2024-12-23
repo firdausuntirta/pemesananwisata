@@ -126,4 +126,27 @@ class AdminController extends Controller
             ]);
         }
     }
+
+    public function apiLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        // Gunakan guard admin
+        if (Auth::guard('admin')->attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Jika Anda ingin mengembalikan token atau data admin
+            return response()->json([
+                'message' => 'Login berhasil',
+                'admin' => Auth::guard('admin')->user(),
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Kredensial tidak valid.',
+        ], 401);
+    }
 }

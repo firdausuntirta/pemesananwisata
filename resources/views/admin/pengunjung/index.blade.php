@@ -12,12 +12,12 @@
                     </span>
                     <span class="text">Tambah Pengunjung</span>
                 </a>
-                <button class="btn btn-success btn-icon-split" data-toggle="modal" data-target="#exportModal">
+                {{-- <button class="btn btn-success btn-icon-split" data-toggle="modal" data-target="#exportModal">
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
                     <span class="text">Export</span>
-                </button>
+                </button> --}}
             </div>
         </div>
 
