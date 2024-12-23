@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Admin;
 
 class AdminController extends Controller
 {
@@ -174,5 +175,46 @@ class AdminController extends Controller
         return response()->json([
             'message' => 'Logout successful',
         ], 200);
+    }
+    public function apiRegister(Request $request)
+    {
+        try {
+            // Validasi data input
+            $validatedData = $request->validate([
+                'nama' => 'required|string|max:40',
+                'email' => 'required|email|unique:admin,email', // Pastikan email unik
+                'password' => 'required|string|min:6', // Password minimal 6 karakter
+            ]);
+
+            // Hash password sebelum menyimpannya
+            $admin = Admin::create([
+                'email' => $validatedData['email'],
+                'password' => bcrypt($validatedData['password']),
+                'nama' => $validatedData['nama'],
+            ]);
+
+
+            // Generate token API menggunakan Sanctum
+            $token = $admin->createToken($validatedData['email'])->plainTextToken;
+
+            return response()->json([
+                'message' => 'Registration successful',
+                'admin' => [
+                    'id' => $admin->id,
+                    'nama' => $admin->nama,
+                    'email' => $admin->email,
+                ],
+                'token' => $token,
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('API Register Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json(['message' => 'An error occurred during registration', 'data' => $e->getMessage()], 500);
+        }
     }
 }

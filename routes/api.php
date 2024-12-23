@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
 
 // Rute API
 Route::post('/admin/login', [AdminController::class, 'apiLogin']);
+Route::post('/admin/register', [AdminController::class, 'apiRegister']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/admin/logout', [AdminController::class, 'apiLogout']);
     Route::get('/pengunjung/jumlah/today', [ApiAdminPengunjungController::class, 'getJumlahPengunjungToday']);
@@ -24,4 +25,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/pengunjung/{id}', [ApiAdminPengunjungController::class, 'update']);
     Route::delete('/pengunjung/{id}', [ApiAdminPengunjungController::class, 'destroy']);
 });
-
