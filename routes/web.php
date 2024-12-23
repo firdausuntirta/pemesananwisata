@@ -53,5 +53,8 @@ Route::prefix('admin')->group(function () {
 });
 // Rute API
 Route::get('/api/pengunjung/jumlah', [AdminPengunjungController::class, 'getJumlahPengunjung']);
+Route::get('/api/pengunjung/charttotaltahunan', [AdminPengunjungController::class, 'getDataPengunjungTahunan']);
+Route::get('/api/pengunjung/charttotalbulanan', [AdminPengunjungController::class, 'getDataPengunjungBulanan']);
+Route::get('/api/pengunjung/charttotalharian', [AdminPengunjungController::class, 'getDataPengunjungHarian']);
 
 require __DIR__ . '/auth.php';
